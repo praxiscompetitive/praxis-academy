@@ -15,14 +15,17 @@ export default async function Admin() {
   ]);
   return (
     <>
+      <p className="meta muted">Console</p>
       <h1>Admin</h1>
-      <div className="card"><strong>Overview</strong>: {st.learners} learners · {st.submitted} awaiting review · {st.passed} passed · {st.revise} need revision</div>
+      <div className="stat">
+        {([[st.learners, "Learners"], [st.submitted, "Awaiting review"], [st.passed, "Passed"], [st.revise, "Need revision"]] as const).map(([n, l]) => <div className="card" key={l}><span className="n">{n}</span><span className="meta muted">{l}</span></div>)}
+      </div>
 
       <h2>Programmes</h2>
       {ps.map((p) => (
         <form action={togglePublish} className="card row" key={p.id}>
           <input type="hidden" name="id" value={p.id} />
-          <span><strong>{p.title}</strong> v{p.version} · {mods.filter((m) => m.programmeId === p.id).length} modules</span>
+          <span><span className="title">{p.title}</span> <span className="tag">v{p.version}</span> <span className="muted">{mods.filter((m) => m.programmeId === p.id).length} modules</span></span>
           <button className="alt">{p.published ? "Unpublish" : "Publish"}</button>
         </form>
       ))}
@@ -38,7 +41,7 @@ export default async function Admin() {
         <label htmlFor="mc">Code</label><input id="mc" name="code" required placeholder="M13" />
         <label htmlFor="mt">Title</label><input id="mt" name="title" required />
         <label htmlFor="mo">Outcome</label><input id="mo" name="outcome" />
-        <label htmlFor="mr">Prerequisite modules (ctrl/cmd-click for several)</label>
+        <label htmlFor="mr">Prerequisite modules (cmd or ctrl-click for several)</label>
         <select id="mr" name="requires" multiple size={5}>{mods.map((m) => <option key={m.id} value={m.id}>{m.code} {m.title}</option>)}</select>
         <p><button>Add module</button></p>
       </form>
@@ -64,7 +67,7 @@ export default async function Admin() {
       </form>
 
       <h2>Recent audit events</h2>
-      <table><tbody>{log.map((l) => <tr key={l.id}><td>{l.createdAt.toLocaleString()}</td><td>{l.action}</td><td className="muted">{l.detail}</td></tr>)}</tbody></table>
+      <div className="card"><table><tbody>{log.map((l) => <tr key={l.id}><td>{l.createdAt.toLocaleString()}</td><td>{l.action}</td><td className="muted">{l.detail}</td></tr>)}</tbody></table></div>
     </>
   );
 }

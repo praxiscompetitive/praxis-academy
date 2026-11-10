@@ -14,7 +14,7 @@ export default async function Lesson({ params }: { params: Promise<{ id: string 
   const [d] = await db.select().from(lessonDone).where(and(eq(lessonDone.userId, me.id), eq(lessonDone.lessonId, l.id)));
   return (
     <>
-      <p><Link href={`/m/${l.moduleId}`}>← Module</Link></p>
+      <Link className="crumb" href={`/m/${l.moduleId}`}>← Module</Link>
       <h1>{l.title}</h1>
       <div className="card"><pre className="body">{l.body}</pre></div>
       {d ? <span className="tag ok">Completed</span>

@@ -17,26 +17,26 @@ export default async function Review({ params }: { params: Promise<{ id: string 
   const prev = hist.filter((h) => h.a.userId === a.userId && h.a.n < a.n);
   return (
     <>
-      <p><Link href="/review">← Queue</Link></p>
-      <h1>{m.title}</h1><p>{u.name} · attempt {a.n}</p>
+      <Link className="crumb" href="/review">← Reviews</Link>
+      <h1>{m.title}</h1><p className="lead">{u.name} · attempt {a.n}</p>
       <div className="card">
-        <strong>Evidence</strong>
+        <h2>Evidence</h2>
         <ul>{a.urls.map((x) => <li key={x}><a href={x} rel="noopener noreferrer nofollow" target="_blank">{x}</a></li>)}</ul>
         {a.notes && <p>{a.notes}</p>}
         <p className="muted">AI disclosure: {a.aiDisclosure || "none stated"}</p>
         <p className="muted">Submitted links are untrusted; open them in a safe environment.</p>
       </div>
-      {prev.map(({ a: p, r }) => <div className="card" key={p.id}><strong>Attempt {p.n}</strong> — {r?.outcome}: {r?.comment}</div>)}
-      {a.status !== "submitted" ? <p className="tag">Already reviewed</p> :
+      {prev.map(({ a: p, r }) => <div className="card" key={p.id}><span className="title">Attempt {p.n}</span> <span className="tag">{r?.outcome}</span><p className="muted" style={{margin:".5rem 0 0"}}>{r?.comment}</p></div>)}
+      {a.status !== "submitted" ? <p><span className="tag">Already reviewed</span></p> :
       <form action={review} className="card">
         <input type="hidden" name="id" value={a.id} />
         {m.rubric.map((c, i) => (
-          <div key={c.name}><label htmlFor={`c${i}`}>{c.name} <span className="muted">— {c.description}</span></label>
-            <select id={`c${i}`} name={`c${i}`} required defaultValue=""><option value="" disabled>Score…</option>
-              <option value="0">0 – missing</option><option value="1">1 – weak</option><option value="2">2 – meets</option><option value="3">3 – strong</option></select></div>
+          <div key={c.name}><label htmlFor={`c${i}`}>{c.name} <span className="muted">· {c.description}</span></label>
+            <select id={`c${i}`} name={`c${i}`} required defaultValue=""><option value="" disabled>Score</option>
+              <option value="0">0: missing</option><option value="1">1: weak</option><option value="2">2: meets</option><option value="3">3: strong</option></select></div>
         ))}
         <label htmlFor="comment">Evidence-based feedback</label><textarea id="comment" name="comment" rows={4} required />
-        <p className="muted">Pass requires ≥{m.passScore} on every criterion; otherwise the learner is asked to revise.</p>
+        <p className="muted">Pass needs {m.passScore} on every criterion; otherwise the learner is asked to revise.</p>
         <button>Record outcome</button>
       </form>}
     </>

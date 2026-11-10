@@ -12,11 +12,12 @@ export default async function Queue() {
     .where(eq(attempts.status, "submitted")).orderBy(asc(attempts.createdAt));
   return (
     <>
-      <h1>Review queue ({q.length})</h1>
-      {q.length === 0 && <p className="muted">Nothing waiting.</p>}
+      <p className="meta muted">{q.length} waiting</p>
+      <h1>Reviews</h1>
+      {q.length === 0 && <p className="lead">Nothing waiting. Check back soon.</p>}
       {q.map(({ a, m, u }) => (
         <div className="card row" key={a.id}>
-          <div><strong>{m.title}</strong> — {u.name}, attempt {a.n}<br /><span className="muted">{a.createdAt.toLocaleString()}</span></div>
+          <div><span className="title">{m.title}</span><p className="muted" style={{margin:".35rem 0 0"}}>{u.name} · attempt {a.n} · {a.createdAt.toLocaleString()}</p></div>
           <Link className="btn" href={`/review/${a.id}`}>Review</Link>
         </div>
       ))}

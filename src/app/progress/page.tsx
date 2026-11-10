@@ -17,20 +17,24 @@ export default async function Progress() {
   const rank = [...RANKS].reverse().find(([n]) => ev.length >= n)![1];
   return (
     <>
+      <p className="meta muted">{rank}</p>
       <h1>{me.name}</h1>
-      <p><span className="tag">{rank}</span> <span className="tag">{x.xp} XP</span> <span className="tag ok">{ev.length} verified competencies</span></p>
-      <p className="muted">XP rewards activity. Rank and unlocks come only from reviewed evidence.</p>
-      <h2>Portfolio — verified work</h2>
+      <p className="lead">XP rewards activity. Rank and unlocks come only from reviewed evidence.</p>
+      <div className="stat">
+        <div className="card"><span className="n">{ev.length}</span><span className="meta muted">Verified competencies</span></div>
+        <div className="card"><span className="n">{x.xp}</span><span className="meta muted">XP</span></div>
+      </div>
+      <h2>Portfolio</h2>
       {work.filter((w) => w.a.status === "passed").map(({ a, m }) => (
-        <div className="card" key={a.id}><strong>{m.title}</strong> <span className="tag ok">verified</span>
+        <div className="card" key={a.id}><div className="row"><span className="title">{m.title}</span><span className="tag ok">Verified</span></div>
           <ul>{a.urls.map((u) => <li key={u}><a href={u} rel="noopener noreferrer nofollow" target="_blank">{u}</a></li>)}</ul></div>
       ))}
       {!work.some((w) => w.a.status === "passed") && <p className="muted">Pass a mission to add verified work.</p>}
       <h2>Competencies</h2>
-      <ul>{ev.map((e) => <li key={e.name}>{e.name}</li>)}</ul>
+      <div className="card"><ul style={{margin:"0"}}>{ev.length === 0 && <li className="muted">None yet.</li>}{ev.map((e) => <li key={e.name}>{e.name}</li>)}</ul></div>
       <h2>All attempts</h2>
-      <table><thead><tr><th>Mission</th><th>#</th><th>Status</th></tr></thead>
-        <tbody>{work.map(({ a, m }) => <tr key={a.id}><td>{m.title}</td><td>{a.n}</td><td>{a.status}</td></tr>)}</tbody></table>
+      <div className="card"><table><thead><tr><th>Mission</th><th>#</th><th>Status</th></tr></thead>
+        <tbody>{work.map(({ a, m }) => <tr key={a.id}><td>{m.title}</td><td>{a.n}</td><td>{a.status}</td></tr>)}</tbody></table></div>
     </>
   );
 }

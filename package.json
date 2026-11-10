@@ -12,6 +12,7 @@
     "test": "tsx --env-file=.env.local scripts/e2e.ts"
   },
   "dependencies": {
+    "@phosphor-icons/react": "^2.1.10",
     "bcryptjs": "^3.0.3",
     "drizzle-orm": "^0.45.4",
     "next": "^16.4.6",
